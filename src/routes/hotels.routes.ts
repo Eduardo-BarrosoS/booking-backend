@@ -7,43 +7,45 @@ export const hotelsRoute = express.Router()
 hotelsRoute.post("/", async (req: Request, res:Response) => {
     const newHotel = new Hotel(req.body)
     try{
-        const saveHotel = newHotel.save()
+        const saveHotel = await newHotel.save()
         res.status(200).json(saveHotel)
     } catch (err) {
         res.status(500).json(err)
     }
-    res.json("Hollo this is my  third endpoint")
 })
 
-hotelsRoute.put("/",  async (req: Request, res:Response) => {
-    const newHotel = new Hotel(req.body)
+hotelsRoute.put("/:id",  async (req: Request, res:Response) => {
     try{
-        const saveHotel = newHotel.save()
-        res.status(200).json(saveHotel)
+        const updateHotel = await Hotel.findByIdAndUpdate(req.params.id, { $set: req.body}, { new: true })
+        res.status(200).json(updateHotel)
     } catch (err) {
         res.status(500).json(err)
     }
-    res.json("Hollo this is my  third endpoint")
+})
+
+hotelsRoute.delete("/:id",  async (req: Request, res:Response) => {
+    try{
+         await Hotel.findByIdAndDelete(req.params.id)
+        res.status(200).json("Hotel deleted")
+    } catch (err) {
+        res.status(500).json(err)
+    }
+})
+
+hotelsRoute.get("/:id",  async (req: Request, res:Response) => {
+    try{
+        const hotel = await Hotel.findById(req.params.id)
+        res.status(200).json(hotel)
+    } catch (err) {
+        res.status(500).json(err)
+    }
 })
 
 hotelsRoute.get("/",  async (req: Request, res:Response) => {
-    const newHotel = new Hotel(req.body)
     try{
-        const saveHotel = newHotel.save()
-        res.status(200).json(saveHotel)
+        const hotel = await Hotel.find()
+        res.status(200).json(hotel)
     } catch (err) {
         res.status(500).json(err)
     }
-    res.json("Hollo this is my  third endpoint")
-})
-
-hotelsRoute.get("/hotels",  async (req: Request, res:Response) => {
-    const newHotel = new Hotel(req.body)
-    try{
-        const saveHotel = newHotel.save()
-        res.status(200).json(saveHotel)
-    } catch (err) {
-        res.status(500).json(err)
-    }
-    res.json("Hollo this is my  third endpoint")
 })
