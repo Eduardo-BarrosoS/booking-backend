@@ -1,5 +1,6 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import { Hotel } from "../models/Hotels";
+import { createError } from "../utils/Error";
 
 export const hotelsRoute = express.Router()
 
@@ -41,11 +42,13 @@ hotelsRoute.get("/:id",  async (req: Request, res:Response) => {
     }
 })
 
-hotelsRoute.get("/",  async (req: Request, res:Response) => {
+
+
+hotelsRoute.get("/",  async (req: Request, res:Response, next: NextFunction) => {
     try{
         const hotel = await Hotel.find()
         res.status(200).json(hotel)
     } catch (err) {
-        res.status(500).json(err)
+        next(err)
     }
 })

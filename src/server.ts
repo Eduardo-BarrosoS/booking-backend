@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, ErrorRequestHandler } from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { authRoute } from "./routes/auth.routes";
@@ -32,12 +32,25 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 
+
 app.use(express.json())
 
 app.use("/auth", authRoute)
 app.use("/users", usersRoute)
 app.use("/hotels", hotelsRoute)
 app.use("/rooms", roomsRoute)
+
+app.use(((err, req, res, next) => {
+    const errorStatus = err.status || 500
+    const errorMessage = err.message || "Something went wrong"
+    return res.status(errorStatus).json({
+        success: false,
+        status: errorStatus,
+        message: errorMessage,
+        stack: err.stack
+    })
+    return res.status(500).json("")
+}) as ErrorRequestHandler)
 
 app.listen(3000, () => {
     connect()
