@@ -6,6 +6,7 @@ export interface IUser extends Document {
     email: string;
     password: string;
     isAdmin?: boolean;
+    _doc: any
   }
 
 const UserSchema = new Schema<IUser>({

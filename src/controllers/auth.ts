@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { IUser, User } from "../models/Users";
 import bcrypt from "bcryptjs"
 import { createError } from "../utils/Error";
-// import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 
 export async function register(req: Request, res: Response, next: NextFunction) {
 
@@ -29,8 +29,12 @@ export async function login(req: Request, res: Response, next: NextFunction) {
         const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password)
         if(!isPasswordCorrect) return next(createError(400, "Wrong password or username!"))
 
+        const token = jwt.sign({id: user._id, isAdmin: user.isAdmin}, process.env.JWT as string)
+
         const { password, isAdmin, ...otherDetails} = user._doc;
-        res.status(200).send(otherDetails)
+        res.cookie("access_token", token, {
+            httpOnly: true,
+        }).status(200).send(otherDetails)
     } catch (err) {
         next(err)
     }
