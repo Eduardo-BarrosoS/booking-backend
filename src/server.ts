@@ -1,5 +1,5 @@
 import express, { Request, Response, ErrorRequestHandler } from "express";
-import dotenv from "dotenv";
+import * as dotenv from 'dotenv'
 import mongoose from "mongoose";
 import { authRoute } from "./routes/auth.routes";
 import { hotelsRoute } from "./routes/hotels.routes";
@@ -14,7 +14,7 @@ dotenv.config()
 async function connect() {
     const url = process.env.MONGO as string
     try {
-        await mongoose.connect('mongodb+srv://eduardo:74031036@cluster0.nbvpqsi.mongodb.net/booking?retryWrites=true&w=majority')
+        await mongoose.connect(url)
     } catch (error) {
         throw error;
     }

@@ -1,21 +1,25 @@
 import express, { NextFunction, Request, RequestHandler, Response } from "express";
 import { deleteUser, getAllUser, getUser, updateUser } from "../controllers/user";
-import { verifyToken } from "../utils/verifyToken";
+import { verifyAdmin, verifyToken, verifyUser } from "../utils/verifyToken";
 
 export const usersRoute = express.Router()
 
-usersRoute.get("/checkauthentication", verifyToken as RequestHandler, (req: Request, res: Response, next: NextFunction) => {
-    res.send("Hello user, you are logged in")
-})
+// usersRoute.get("/checkauthentication", verifyToken as RequestHandler, (req: Request, res: Response, next: NextFunction) => {
+//     res.send("Hello user, you are logged in")
+// })
 
-usersRoute.get("/checkuser/:id", (req: Request, res: Response, next: NextFunction) => {
-    res.send("Hello user, you are logged in")
-})
+// usersRoute.get("/checkuser/:id", verifyUser as RequestHandler, (req: Request, res: Response, next: NextFunction) => {
+//     res.send("Hello user, you are logged in and you can delete your account")
+// })
 
-usersRoute.put("/:id",  updateUser)
+// usersRoute.get("/checkadmin/:id", verifyAdmin as RequestHandler, (req: Request, res: Response, next: NextFunction) => {
+//     res.send("Hello admin, you are logged in and you can delete all account")
+// })
 
-usersRoute.delete("/:id",  deleteUser)
+usersRoute.put("/:id", verifyUser  as RequestHandler,  updateUser)
 
-usersRoute.get("/:id", getUser)
+usersRoute.delete("/:id", verifyUser  as RequestHandler, deleteUser)
 
-usersRoute.get("/", getAllUser)
+usersRoute.get("/:id", verifyUser  as RequestHandler, getUser)
+
+usersRoute.get("/", verifyUser  as RequestHandler, getAllUser)

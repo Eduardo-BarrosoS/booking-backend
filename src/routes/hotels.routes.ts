@@ -1,17 +1,16 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { RequestHandler, Response } from "express";
 import { createHotel, deleteHotel, getAllHotel, getHotel, updateHotel } from "../controllers/hotel";
-import { Hotel } from "../models/Hotels";
-import { createError } from "../utils/Error";
+import { verifyAdmin } from "../utils/verifyToken";
 
 export const hotelsRoute = express.Router()
 
 
-hotelsRoute.post("/", createHotel)
+hotelsRoute.post("/", verifyAdmin as RequestHandler, createHotel)
 
-hotelsRoute.put("/:id",  updateHotel)
+hotelsRoute.put("/:id", verifyAdmin as RequestHandler,  updateHotel)
 
-hotelsRoute.delete("/:id",  deleteHotel)
+hotelsRoute.delete("/:id", verifyAdmin as RequestHandler,  deleteHotel)
 
-hotelsRoute.get("/:id", getHotel)
+hotelsRoute.get("/:id",  getHotel)
 
-hotelsRoute.get("/", getAllHotel)
+hotelsRoute.get("/",  getAllHotel)

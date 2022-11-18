@@ -5,7 +5,8 @@ import { User } from "../models/Users";
 export async function updateUser(req: Request, res: Response, next: NextFunction) {
     try{
         const updateUser = await User.findByIdAndUpdate(req.params.id, { $set: req.body}, { new: true })
-        res.status(200).json(updateUser)
+        const { password, isAdmin, ...otherDetails} = updateUser?._doc;
+        res.status(200).json(otherDetails)
     } catch (err) {
         next(err)
     }

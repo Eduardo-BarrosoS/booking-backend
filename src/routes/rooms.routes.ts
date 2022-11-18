@@ -1,11 +1,15 @@
-import express, { Request, Response } from "express";
+import express, { RequestHandler } from "express";
+import { createRoom, deleteRoom, getAllRoom, getRoom, updateRoom } from "../controllers/room";
+import { verifyAdmin } from "../utils/verifyToken";
 
 export const roomsRoute = express.Router()
 
-roomsRoute.get("/", (req: Request, res:Response) => {
-    res.json("Hollo this is my  third endpoint")
-})
+roomsRoute.post("/:hotelid", verifyAdmin as RequestHandler, createRoom)
 
-roomsRoute.get("/rooms", (req: Request, res:Response) => {
-    res.json("Hollo this is my register endpoint")
-})
+roomsRoute.put("/:id", verifyAdmin as RequestHandler,  updateRoom)
+
+roomsRoute.delete("/:id/:hotelid", verifyAdmin as RequestHandler,  deleteRoom)
+
+roomsRoute.get("/:id",  getRoom)
+
+roomsRoute.get("/",  getAllRoom)
