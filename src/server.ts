@@ -6,10 +6,12 @@ import { hotelsRoute } from "./routes/hotels.routes";
 import { usersRoute } from "./routes/users.routes";
 import { roomsRoute } from "./routes/rooms.routes";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 
 const app = express()
 dotenv.config()
+
 
 async function connect() {
     const url = process.env.MONGO as string
@@ -33,6 +35,7 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 
+app.use(cors({ origin: 'http://localhost:3000'}))
 app.use(cookieParser())
 app.use(express.json())
 
