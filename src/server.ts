@@ -1,19 +1,22 @@
 import express, { Request, Response, ErrorRequestHandler } from "express";
-import dotenv from "dotenv";
+import * as dotenv from 'dotenv'
 import mongoose from "mongoose";
 import { authRoute } from "./routes/auth.routes";
 import { hotelsRoute } from "./routes/hotels.routes";
 import { usersRoute } from "./routes/users.routes";
 import { roomsRoute } from "./routes/rooms.routes";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 
 const app = express()
 dotenv.config()
 
+
 async function connect() {
     const url = process.env.MONGO as string
     try {
-        await mongoose.connect('mongodb+srv://eduardo:74031036@cluster0.nbvpqsi.mongodb.net/booking?retryWrites=true&w=majority')
+        await mongoose.connect(url)
     } catch (error) {
         throw error;
     }
@@ -32,7 +35,8 @@ app.get("/", (req: Request, res: Response) => {
 })
 
 
-
+app.use(cors({ origin: 'http://localhost:3000'}))
+app.use(cookieParser())
 app.use(express.json())
 
 app.use("/auth", authRoute)
